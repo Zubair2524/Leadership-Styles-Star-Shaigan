@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device=device-width, initial-scale=1.0">
+  <title>Goleman Leadership Styles Adventure</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      text-align: center;
+      background: linear-gradient(135deg, #007ACC, #009900, #FFD700, #FF3300, #6A0DAD, #FF69B4);
+      color: #333;
+      margin
+
+: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+    .container {
+      padding: 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 15px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
+    h1, h2 {
+      color: #1a1a1a;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+    }
+    h2 {
+      animation: pulseText 2s infinite ease-in-out;
+    }
+    @keyframes pulseText {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    input, button {
+      padding: 15px;
+      font-size: 1.2rem;
+      margin: 0.5rem;
+      border-radius: 8px;
+      border: none;
+      font-weight: bold;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    input {
+      background: #f0f0f0;
+      width: 80%;
+      max-width: 300px;
+    }
+    button {
+      background: #007ACC;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+    .game-screen, .result-screen {
+      display: none;
+    }
+    .word-box {
+      font-size: 2.5rem;
+      margin: 1.5rem 0;
+      padding: 20px;
+      background: linear-gradient(45deg, #007ACC, #FFD700);
+      color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      font-weight: bold;
+      text-transform: uppercase;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    .scenario-question {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin: 1rem 0;
+      padding: 10px;
+      border-radius: 10px;
+    }
+    .scorecard {
+      width: 350px;
+      height: 350px;
+      border-radius: 50%;
+      background: conic-gradient(
+        #007ACC 0deg 60deg, /* Authoritative - Blue */
+        #009900 60deg 120deg, /* Democratic - Green */
+        #FF3300 120deg 180deg, /* Affiliative - Red */
+        #FFD700 180deg 240deg, /* Coaching - Yellow */
+        #6A0DAD 240deg 300deg, /* Pacesetting - Purple */
+        #FF69B4 300deg 360deg /* Coercive - Pink */
+      );
+      position: relative;
+      margin: 2rem auto;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+    .scorecard::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
+      background-size: 400% 400%;
+      animation: glow 5s ease infinite;
+      opacity: 0.3;
+      z-index: 0;
+    }
+    @keyframes glow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .scorecard-text {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      color: white;
+      text-shadow: 2px 2px 4px #000;
+      font-size: 1.5rem;
+      z-index: 1;
+    }
+    .scorecard-text span {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.5);
+      padding: 5px 10px;
+      border-radius: 5px;
+    }
+    .scorecard-text .auth { top: 20%; left: 80%; color: #007ACC; }
+    .scorecard-text .dem { top: 20%; left: 20%; color: #009900; }
+    .scorecard-text .aff { top: 50%; left: 10%; color: #FF3300; }
+    .scorecard-text .coa { top: 50%; left: 90%; color: #FFD700; }
+    .scorecard-text .pac { top: 80%; left: 20%; color: #6A0DAD; }
+    .scorecard-text .coe { top: 80%; left: 80%; color: #FF69B4; }
+    .download-btn, .reset-btn {
+      background: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin: 1rem;
+    }
+    .download-btn:hover, .reset-btn:hover {
+      background: #218838;
+    }
+    .rainbow-glow {
+      height: 15px;
+      width: 100%;
+      background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
+      background-size: 400% 400%;
+      animation: glow 5s ease infinite;
+      border-radius: 10px;
+      margin: 1rem auto;
+    }
+    .celebration {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 2;
+    }
+    .balloon, .firework {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      animation: float 5s linear infinite;
+    }
+    .balloon {
+      background: linear-gradient(45deg, #ff69b4, #ff1493);
+    }
+    .firework {
+      background: linear-gradient(45deg, #ffd700, #ffa500);
+      animation: explode 1.5s ease-out infinite;
+    }
+    @keyframes float {
+      0% { bottom: -50px; opacity: 1; }
+      100% { bottom: 100%; opacity: 0; }
+    }
+    @keyframes explode {
+      0% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(2.5); opacity: 0; }
+    }
+    .progress-bar {
+      width: 80%;
+      height: 20px;
+      background: #e0e0e0;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 1rem auto;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #007ACC, #FFD700);
+      transition: width 0.3s ease;
+    }
+    .description {
+      font-size: 1rem;
+      margin: 1rem 0;
+      color: #444;
+      line-height: 1.5;
+    }
+    .score-details {
+      margin: 1rem 0;
+      font-size: 1.2rem;
+    }
+    .score-details div {
+      margin: 0.5rem 0;
+    }
+    .logo-container {
+      margin: 1rem 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .logo-container img {
+      max-width: 150px;
+      height: auto;
+      margin: 0 1rem;
+    }
+    .praise {
+      font-size: 1.8rem;
+      font-weight: bold;
+      margin: 1rem 0;
+      padding: 10px;
+      border-radius: 10px;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Welcome Screen -->
+    <div class="welcome-screen">
+      <h1>Goleman Leadership Styles Adventure</h1>
+      <p class="description">Discover your leadership style by selecting words that resonate with you. Your journey to leadership mastery starts here!</p>
+      <input type="text" id="name" placeholder="Your Name">
+      <input type="text" id="designation" placeholder="Your Designation">
+      <input type="text" id="team" placeholder="Your Team">
+      <input type="text" id="city" placeholder="Your City">
+      <br>
+      <button onclick="startGame()">Begin Your Journey</button>
+      <div class="rainbow-glow"></div>
+    </div>
+
+    <!-- Game Screen -->
+    <div class="game-screen">
+      <h2>Choose 25 Words for Your Leadership Style</h2>
+      <p class="description">Select words that reflect your leadership approach. You'll need to choose exactly 25 words.</p>
+      <div class="word-box" id="wordBox"></div>
+      <div id="scenarioQuestion" class="scenario-question"></div>
+      <button onclick="selectWord(true)">Yes, That's Me!</button>
+      <button onclick="selectWord(false)">Not Quite</button>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <p>Words Selected: <span id="wordCount">0</span>/25</p>
+      <div class="rainbow-glow"></div>
+    </div>
+
+    <!-- Result Screen -->
+    <div class="result-screen">
+      <h2>Congratulations, <span id="userName"></span>! Your Leadership Style Results</h2>
+      <p class="description">You've completed the Leadership Style Assessment! Your dominant style(s): <span id="dominantType"></span>. Explore your results below!</p>
+      <div class="scorecard" id="scoreCard">
+        <div class="scorecard-text">
+          <span class="auth">Auth</span>
+          <span class="dem">Dem</span>
+          <span class="aff">Aff</span>
+          <span class="coa">Coa</span>
+          <span class="pac">Pac</span>
+          <span class="coe">Coe</span>
+        </div>
+        <div class="celebration">
+          <div class="balloon" style="left:10%; animation-delay: 0s;"></div>
+          <div class="balloon" style="left:30%; animation-delay: 1s;"></div>
+          <div class="balloon" style="left:50%; animation-delay: 2s;"></div>
+          <div class="balloon" style="left:70%; animation-delay: 3s;"></div>
+          <div class="firework" style="left:20%; animation-delay: 0.5s;"></div>
+          <div class="firework" style="left:40%; animation-delay: 1.5s;"></div>
+          <div class="firework" style="left:60%; animation-delay: 2.5s;"></div>
+          <div class="firework" style="left:80%; animation-delay: 3.5s;"></div>
+        </div>
+      </div>
+      <div class="score-details" id="profileScores"></div>
+      <div class="praise" id="praiseText"></div>
+      <div class="logo-container">
+        <img src="shaigan_pharma_logo.png" alt="Shaigan Pharma Logo">
+        <img src="star_department_logo.png" alt="STAR Department Logo">
+      </div>
+      <h3 id="userInfo"></h3>
+      <button class="download-btn" onclick="downloadScorecard()">Download Your Scorecard</button>
+      <button class="reset-btn" onclick="location.reload()">Start Over</button>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    const words = [
+      // Authoritative (Auth - Blue)
+      'Visionary', 'Strategic', 'Confident', 'Decisive', 'Inspiring', 'Directive', 'Bold', 'Goal-oriented', 'Charismatic', 'Driven',
+      'Motivational', 'Focused', 'Clear', 'Assertive', 'Influential', 'Purposeful', 'Dynamic', 'Authoritative', 'Leaderly', 'Proactive',
+      'Determined', 'Commanding', 'Resolute', 'Vision-driven', 'Persuasive', 'Strategic', 'Confident', 'Decisive', 'Inspiring', 'Bold',
+      'Goal-oriented', 'Charismatic', 'Driven', 'Motivational', 'Focused',
+
+      // Democratic (Dem - Green)
+      'Collaborative', 'Inclusive', 'Fair', 'Participative', 'Team-oriented', 'Consultative', 'Open-minded', 'Consensus-driven', 'Supportive', 'Engaging',
+      'Cooperative', 'Respectful', 'Empowering', 'Listening', 'Balanced', 'Equitable', 'Group-focused', 'Transparent', 'Encouraging', 'Harmonious',
+      'Inclusive', 'Collaborative', 'Fair', 'Participative', 'Team-oriented', 'Consultative', 'Open-minded', 'Consensus-driven', 'Supportive', 'Engaging',
+      'Cooperative', 'Respectful', 'Empowering', 'Listening', 'Balanced',
+
+      // Affiliative (Aff - Red)
+      'Empathetic', 'Caring', 'Supportive', 'Nurturing', 'Relationship-focused', 'Warm', 'Compassionate', 'Team-building', 'Harmonious', 'Friendly',
+      'Understanding', 'Sensitive', 'Approachable', 'Encouraging', 'Kind', 'Relational', 'Sympathetic', 'Inclusive', 'Warm-hearted', 'Considerate',
+      'Empathetic', 'Caring', 'Supportive', 'Nurturing', 'Relationship-focused', 'Warm', 'Compassionate', 'Team-building', 'Harmonious', 'Friendly',
+
+      // Coaching (Coa - Yellow)
+      'Mentoring', 'Developmental', 'Guiding', 'Inspirational', 'Supportive', 'Empowering', 'Patient', 'Motivational', 'Growth-oriented', 'Encouraging',
+      'Insightful', 'Nurturing', 'Reflective', 'Teaching', 'Uplifting', 'Development-focused', 'Empathetic', 'Goal-setting', 'Personalized', 'Supportive',
+      'Mentoring', 'Developmental', 'Guiding', 'Inspirational', 'Supportive', 'Empowering', 'Patient', 'Motivational', 'Growth-oriented', 'Encouraging',
+
+      // Pacesetting (Pac - Purple)
+      'Driven', 'Results-oriented', 'Ambitious', 'High-performing', 'Excellence-focused', 'Task-oriented', 'Efficient', 'Goal-driven', 'Competitive', 'Proactive',
+      'Determined', 'Fast-paced', 'Achievement-oriented', 'Demanding', 'Focused', 'Performance-driven', 'Energetic', 'Persistent', 'Relentless', 'Dynamic',
+      'Driven', 'Results-oriented', 'Ambitious', 'High-performing', 'Excellence-focused', 'Task-oriented', 'Efficient', 'Goal-driven', 'Competitive', 'Proactive',
+
+      // Coercive (Coe - Pink)
+      'Directive', 'Authoritative', 'Commanding', 'Decisive', 'Firm', 'Controlling', 'Resolute', 'Direct', 'Assertive', 'Immediate',
+      'Action-oriented', 'Forceful', 'Clear', 'Determined', 'Urgent', 'Dominant', 'Orderly', 'Structured', 'Focused', 'Task-driven',
+      'Directive', 'Authoritative', 'Commanding', 'Decisive', 'Firm', 'Controlling', 'Resolute', 'Direct', 'Assertive', 'Immediate'
+    ];
+
+    const wordStyles = {
+      // Authoritative (Auth - Blue)
+      'Visionary': 'Auth', 'Strategic': 'Auth', 'Confident': 'Auth', 'Decisive': 'Auth', 'Inspiring': 'Auth', 'Directive': 'Auth', 'Bold': 'Auth', 'Goal-oriented': 'Auth', 'Charismatic': 'Auth', 'Driven': 'Auth',
+      'Motivational': 'Auth', 'Focused': 'Auth', 'Clear': 'Auth', 'Assertive': 'Auth', 'Influential': 'Auth', 'Purposeful': 'Auth', 'Dynamic': 'Auth', 'Authoritative': 'Auth', 'Leaderly': 'Auth', 'Proactive': 'Auth',
+      'Determined': 'Auth', 'Commanding': 'Auth', 'Resolute': 'Auth', 'Vision-driven': 'Auth', 'Persuasive': 'Auth',
+
+      // Democratic (Dem - Green)
+      'Collaborative': 'Dem', 'Inclusive': 'Dem', 'Fair': 'Dem', 'Participative': 'Dem', 'Team-oriented': 'Dem', 'Consultative': 'Dem', 'Open-minded': 'Dem', 'Consensus-driven': 'Dem', 'Supportive': 'Dem', 'Engaging': 'Dem',
+      'Cooperative': 'Dem', 'Respectful': 'Dem', 'Empowering': 'Dem', 'Listening': 'Dem', 'Balanced': 'Dem', 'Equitable': 'Dem', 'Group-focused': 'Dem', 'Transparent': 'Dem', 'Encouraging': 'Dem', 'Harmonious': 'Dem',
+
+      // Affiliative (Aff - Red)
+      'Empathetic': 'Aff', 'Caring': 'Aff', 'Supportive': 'Aff', 'Nurturing': 'Aff', 'Relationship-focused': 'Aff', 'Warm': 'Aff', 'Compassionate': 'Aff', 'Team-building': 'Aff', 'Harmonious': 'Aff', 'Friendly': 'Aff',
+      'Understanding': 'Aff', 'Sensitive': 'Aff', 'Approachable': 'Aff', 'Encouraging': 'Aff', 'Kind': 'Aff', 'Relational': 'Aff', 'Sympathetic': 'Aff', 'Inclusive': 'Aff', 'Warm-hearted': 'Aff', 'Considerate': 'Aff',
+
+      // Coaching (Coa - Yellow)
+      'Mentoring': 'Coa', 'Developmental': 'Coa', 'Guiding': 'Coa', 'Inspirational': 'Coa', 'Supportive': 'Coa', 'Empowering': 'Coa', 'Patient': 'Coa', 'Motivational': 'Coa', 'Growth-oriented': 'Coa', 'Encouraging': 'Coa',
+      'Insightful': 'Coa', 'Nurturing': 'Coa', 'Reflective': 'Coa', 'Teaching': 'Coa', 'Uplifting': 'Coa', 'Development-focused': 'Coa', 'Empathetic': 'Coa', 'Goal-setting': 'Coa', 'Personalized': 'Coa',
+
+      // Pacesetting (Pac - Purple)
+      'Driven': 'Pac', 'Results-oriented': 'Pac', 'Ambitious': 'Pac', 'High-performing': 'Pac', 'Excellence-focused': 'Pac', 'Task-oriented': 'Pac', 'Efficient': 'Pac', 'Goal-driven': 'Pac', 'Competitive': 'Pac', 'Proactive': 'Pac',
+      'Determined': 'Pac', 'Fast-paced': 'Pac', 'Achievement-oriented': 'Pac', 'Demanding': 'Pac', 'Focused': 'Pac', 'Performance-driven': 'Pac', 'Energetic': 'Pac', 'Persistent': 'Pac', 'Relentless': 'Pac', 'Dynamic': 'Pac',
+
+      // Coercive (Coe - Pink)
+      'Directive': 'Coe', 'Authoritative': 'Coe', 'Commanding': 'Coe', 'Decisive': 'Coe', 'Firm': 'Coe', 'Controlling': 'Coe', 'Resolute': 'Coe', 'Direct': 'Coe', 'Assertive': 'Coe', 'Immediate': 'Coe',
+      'Action-oriented': 'Coe', 'Forceful': 'Coe', 'Clear': 'Coe', 'Determined': 'Coe', 'Urgent': 'Coe', 'Dominant': 'Coe', 'Orderly': 'Coe', 'Structured': 'Coe', 'Focused': 'Coe', 'Task-driven': 'Coe'
+    };
+
+    const scenarios = {
+      // Authoritative (Auth - Blue)
+      'Visionary': '<strong>Would you inspire your team with a bold vision for the future?</strong>',
+      'Strategic': '<strong>Would you develop a clear plan to achieve long-term goals?</strong>',
+      'Confident': '<strong>Would you lead a meeting with assurance and clarity?</strong>',
+      'Decisive': '<strong>Would you make quick decisions to steer a project forward?</strong>',
+      'Inspiring': '<strong>Would you motivate your team with an uplifting speech?</strong>',
+      'Directive': '<strong>Would you clearly outline tasks for your team to follow?</strong>',
+      'Bold': '<strong>Would you propose a daring new strategy to gain a competitive edge?</strong>',
+      'Goal-oriented': '<strong>Would you set ambitious targets to drive team success?</strong>',
+      'Charismatic': '<strong>Would you rally your team with your engaging leadership style?</strong>',
+      'Driven': '<strong>Would you push your team to exceed their performance goals?</strong>',
+      'Motivational': '<strong>Would you encourage your team to overcome challenges?</strong>',
+      'Focused': '<strong>Would you keep your team on track toward a clear objective?</strong>',
+      'Clear': '<strong>Would you communicate expectations with precision?</strong>',
+      'Assertive': '<strong>Would you confidently defend your team’s strategy?</strong>',
+      'Influential': '<strong>Would you persuade stakeholders to support your vision?</strong>',
+      'Purposeful': '<strong>Would you lead with a strong sense of mission?</strong>',
+      'Dynamic': '<strong>Would you energize your team with your enthusiasm?</strong>',
+      'Authoritative': '<strong>Would you take charge in a crisis to guide your team?</strong>',
+      'Leaderly': '<strong>Would you inspire confidence with your leadership presence?</strong>',
+      'Proactive': '<strong>Would you anticipate challenges and act before they arise?</strong>',
+      'Determined': '<strong>Would you stay committed to your goals despite obstacles?</strong>',
+      'Commanding': '<strong>Would you lead with authority to ensure team alignment?</strong>',
+      'Resolute': '<strong>Would you stand firm on decisions to maintain direction?</strong>',
+      'Vision-driven': '<strong>Would you align your team around a shared vision?</strong>',
+      'Persuasive': '<strong>Would you convince others to adopt your strategic plan?</strong>',
+
+      // Democratic (Dem - Green)
+      'Collaborative': '<strong>Would you involve your team in decision-making processes?</strong>',
+      'Inclusive': '<strong>Would you ensure every team member’s voice is heard?</strong>',
+      'Fair': '<strong>Would you treat all team members equitably in a project?</strong>',
+      'Participative': '<strong>Would you encourage team input before finalizing plans?</strong>',
+      'Team-oriented': '<strong>Would you prioritize team success over individual gain?</strong>',
+      'Consultative': '<strong>Would you seek advice from your team before deciding?</strong>',
+      'Open-minded': '<strong>Would you consider diverse perspectives in a meeting?</strong>',
+      'Consensus-driven': '<strong>Would you aim for group agreement on key decisions?</strong>',
+      'Supportive': '<strong>Would you back your team’s ideas during a discussion?</strong>',
+      'Engaging': '<strong>Would you foster lively team brainstorming sessions?</strong>',
+      'Cooperative': '<strong>Would you work closely with others to achieve goals?</strong>',
+      'Respectful': '<strong>Would you value differing opinions in a team setting?</strong>',
+      'Empowering': '<strong>Would you delegate tasks to build team confidence?</strong>',
+      'Listening': '<strong>Would you actively listen to your team’s concerns?</strong>',
+      'Balanced': '<strong>Would you weigh all options fairly before deciding?</strong>',
+      'Equitable': '<strong>Would you ensure fair distribution of workload?</strong>',
+      'Group-focused': '<strong>Would you prioritize team cohesion in projects?</strong>',
+      'Transparent': '<strong>Would you share decision-making processes openly?</strong>',
+      'Encouraging': '<strong>Would you motivate team members to share ideas?</strong>',
+      'Harmonious': '<strong>Would you promote unity in team interactions?</strong>',
+
+      // Affiliative (Aff - Red)
+      'Empathetic': '<strong>Would you support a team member struggling with personal issues?</strong>',
+      'Caring': '<strong>Would you check in on your team’s well-being regularly?</strong>',
+      'Supportive': '<strong>Would you offer help to a struggling colleague?</strong>',
+      'Nurturing': '<strong>Would you create a supportive environment for new hires?</strong>',
+      'Relationship-focused': '<strong>Would you build strong bonds with your team?</strong>',
+      'Warm': '<strong>Would you greet your team with genuine warmth?</strong>',
+      'Compassionate': '<strong>Would you show kindness during a team member’s hardship?</strong>',
+      'Team-building': '<strong>Would you organize activities to strengthen team bonds?</strong>',
+      'Harmonious': '<strong>Would you resolve conflicts to maintain team harmony?</strong>',
+      'Friendly': '<strong>Would you make new team members feel welcome?</strong>',
+      'Understanding': '<strong>Would you empathize with a team member’s challenges?</strong>',
+      'Sensitive': '<strong>Would you notice when a team member seems upset?</strong>',
+      'Approachable': '<strong>Would team members feel comfortable approaching you?</strong>',
+      'Encouraging': '<strong>Would you uplift a team member after a setback?</strong>',
+      'Kind': '<strong>Would you offer kind words to boost team morale?</strong>',
+      'Relational': '<strong>Would you prioritize relationships in your leadership?</strong>',
+      'Sympathetic': '<strong>Would you show concern for a team member’s struggles?</strong>',
+      'Inclusive': '<strong>Would you ensure everyone feels part of the team?</strong>',
+      'Warm-hearted': '<strong>Would you show genuine care in team interactions?</strong>',
+      'Considerate': '<strong>Would you consider team members’ feelings before acting?</strong>',
+
+      // Coaching (Coa - Yellow)
+      'Mentoring': '<strong>Would you guide a team member to develop new skills?</strong>',
+      'Developmental': '<strong>Would you focus on long-term growth for your team?</strong>',
+      'Guiding': '<strong>Would you help a colleague navigate a career challenge?</strong>',
+      'Inspirational': '<strong>Would you motivate a team member to reach their potential?</strong>',
+      'Supportive': '<strong>Would you provide feedback to help a colleague improve?</strong>',
+      'Empowering': '<strong>Would you give team members opportunities to grow?</strong>',
+      'Patient': '<strong>Would you take time to teach a struggling team member?</strong>',
+      'Motivational': '<strong>Would you encourage a team member to set high goals?</strong>',
+      'Growth-oriented': '<strong>Would you prioritize skill development in your team?</strong>',
+      'Encouraging': '<strong>Would you support a team member’s career aspirations?</strong>',
+      'Insightful': '<strong>Would you offer deep insights to help a team member grow?</strong>',
+      'Nurturing': '<strong>Would you foster a team member’s professional growth?</strong>',
+      'Reflective': '<strong>Would you help a team member reflect on their progress?</strong>',
+      'Teaching': '<strong>Would you share knowledge to help your team succeed?</strong>',
+      'Uplifting': '<strong>Would you inspire a team member to overcome doubts?</strong>',
+      'Development-focused': '<strong>Would you create plans for team skill growth?</strong>',
+      'Empathetic': '<strong>Would you understand a team member’s learning needs?</strong>',
+      'Goal-setting': '<strong>Would you help team members set personal goals?</strong>',
+      'Personalized': '<strong>Would you tailor feedback to individual team members?</strong>',
+
+      // Pacesetting (Pac - Purple)
+      'Driven': '<strong>Would you push your team to meet high performance targets?</strong>',
+      'Results-oriented': '<strong>Would you focus on achieving measurable outcomes?</strong>',
+      'Ambitious': '<strong>Would you set challenging goals for your team?</strong>',
+      'High-performing': '<strong>Would you lead by example with top performance?</strong>',
+      'Excellence-focused': '<strong>Would you demand high standards from your team?</strong>',
+      'Task-oriented': '<strong>Would you prioritize task completion over discussions?</strong>',
+      'Efficient': '<strong>Would you streamline processes to maximize results?</strong>',
+      'Goal-driven': '<strong>Would you align your team toward specific outcomes?</strong>',
+      'Competitive': '<strong>Would you encourage your team to outperform rivals?</strong>',
+      'Proactive': '<strong>Would you take initiative to meet tight deadlines?</strong>',
+      'Determined': '<strong>Would you stay focused on results despite challenges?</strong>',
+      'Fast-paced': '<strong>Would you thrive in a high-pressure work environment?</strong>',
+      'Achievement-oriented': '<strong>Would you celebrate team successes?</strong>',
+      'Demanding': '<strong>Would you set high expectations for team performance?</strong>',
+      'Focused': '<strong>Would you keep your team on track for key deliverables?</strong>',
+      'Performance-driven': '<strong>Would you measure success by team output?</strong>',
+      'Energetic': '<strong>Would you bring high energy to drive team results?</strong>',
+      'Persistent': '<strong>Would you push through obstacles to achieve goals?</strong>',
+      'Relentless': '<strong>Would you maintain focus on results under pressure?</strong>',
+      'Dynamic': '<strong>Would you lead with energy to meet tight deadlines?</strong>',
+
+      // Coercive (Coe - Pink)
+      'Directive': '<strong>Would you give clear instructions in a crisis?</strong>',
+      'Authoritative': '<strong>Would you take charge to resolve an urgent issue?</strong>',
+      'Commanding': '<strong>Would you lead decisively in high-stakes situations?</strong>',
+      'Decisive': '<strong>Would you make quick decisions to address a problem?</strong>',
+      'Firm': '<strong>Would you enforce rules to maintain team discipline?</strong>',
+      'Controlling': '<strong>Would you closely monitor team tasks in a crisis?</strong>',
+      'Resolute': '<strong>Would you stand firm on decisions in tough times?</strong>',
+      'Direct': '<strong>Would you provide straightforward orders to your team?</strong>',
+      'Assertive': '<strong>Would you ensure compliance with team directives?</strong>',
+      'Immediate': '<strong>Would you demand quick action in urgent situations?</strong>',
+      'Action-oriented': '<strong>Would you prioritize immediate task execution?</strong>',
+      'Forceful': '<strong>Would you push your team to act swiftly in a crisis?</strong>',
+      'Clear': '<strong>Would you communicate urgent tasks with no ambiguity?</strong>',
+      'Determined': '<strong>Would you stay focused on resolving critical issues?</strong>',
+      'Urgent': '<strong>Would you act decisively to address immediate needs?</strong>',
+      'Dominant': '<strong>Would you take control to steer a project back on track?</strong>',
+      'Orderly': '<strong>Would you enforce structure in chaotic situations?</strong>',
+      'Structured': '<strong>Would you implement clear processes during a crisis?</strong>',
+      'Focused': '<strong>Would you keep your team focused on urgent priorities?</strong>',
+      'Task-driven': '<strong>Would you prioritize task completion in emergencies?</strong>'
+    };
+
+    let userInfo = {};
+    let selectedWords = [];
+    let availableWords = [...words];
+
+    function startGame() {
+      userInfo = {
+        name: document.getElementById('name').value || 'Leader',
+        designation: document.getElementById('designation').value || 'Manager',
+        team: document.getElementById('team').value || 'Leadership Team',
+        city: document.getElementById('city').value || 'Vision City'
+      };
+      document.querySelector('.welcome-screen').style.display = 'none';
+      document.querySelector('.game-screen').style.display = 'block';
+      shuffleArray(availableWords);
+      showNextWord();
+    }
+
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    function showNextWord() {
+      if (selectedWords.length < 25 && availableWords.length > 0) {
+        const word = availableWords.pop();
+        document.getElementById('wordBox').innerText = word;
+        document.getElementById('scenarioQuestion').innerHTML = scenarios[word] || '<strong>No scenario available for this word.</strong>';
+        updateProgress();
+      } else if (selectedWords.length < 25) {
+        alert("Not enough unique words available to select 25. Please restart and try again.");
+        location.reload();
+      } else {
+        showResults();
+      }
+    }
+
+    function updateProgress() {
+      const progress = (selectedWords.length / 25) * 100;
+      document.getElementById('progressFill').style.width = `${progress}%`;
+      document.getElementById('wordCount').innerText = selectedWords.length;
+    }
+
+    function selectWord(selected) {
+      if (selected) {
+        selectedWords.push(availableWords[availableWords.length - 1]);
+      }
+      document.getElementById('wordCount').innerText = selectedWords.length;
+
+      if (selectedWords.length >= 25) {
+        showResults();
+      } else {
+        showNextWord();
+      }
+    }
+
+    function showResults() {
+      document.querySelector('.game-screen').style.display = 'none';
+      document.querySelector('.result-screen').style.display = 'block';
+
+      const styleScores = { Auth: 0, Dem: 0, Aff: 0, Coa: 0, Pac: 0, Coe: 0 };
+      selectedWords.forEach(word => {
+        const style = wordStyles[word];
+        styleScores[style] += 4;
+      });
+
+      const totalScore = 100;
+      const percentages = {
+        Auth: Math.round((styleScores.Auth / totalScore) * 100),
+        Dem: Math.round((styleScores.Dem / totalScore) * 100),
+        Aff: Math.round((styleScores.Aff / totalScore) * 100),
+        Coa: Math.round((styleScores.Coa / totalScore) * 100),
+        Pac: Math.round((styleScores.Pac / totalScore) * 100),
+        Coe: Math.round((styleScores.Coe / totalScore) * 100)
+      };
+
+      const sum = percentages.Auth + percentages.Dem + percentages.Aff + percentages.Coa + percentages.Pac + percentages.Coe;
+      if (sum !== 100) {
+        const diff = 100 - sum;
+        percentages.Auth += diff;
+      }
+
+      document.getElementById('profileScores').innerHTML =
+        `<div style="color: #007ACC;">Authoritative (Blue): ${percentages.Auth}%</div>
+         <div style="color: #009900;">Democratic (Green): ${percentages.Dem}%</div>
+         <div style="color: #FF3300;">Affiliative (Red): ${percentages.Aff}%</div>
+         <div style="color: #FFD700;">Coaching (Yellow): ${percentages.Coa}%</div>
+         <div style="color: #6A0DAD;">Pacesetting (Purple): ${percentages.Pac}%</div>
+         <div style="color: #FF69B4;">Coercive (Pink): ${percentages.Coe}%</div>`;
+
+      document.getElementById('userInfo').innerText = `${userInfo.name}, ${userInfo.designation}, STAR - Shaigan Training and Reinforcement, ${userInfo.team}, ${userInfo.city}`;
+      document.getElementById('userName').innerText = userInfo.name;
+
+      const actionWords = {
+        Auth: 'Authoritative (Blue)',
+        Dem: 'Democratic (Green)',
+        Aff: 'Affiliative (Red)',
+        Coa: 'Coaching (Yellow)',
+        Pac: 'Pacesetting (Purple)',
+        Coe: 'Coercive (Pink)'
+      };
+
+      const maxPercentage = Math.max(...Object.values(percentages));
+      const dominantStyles = Object.entries(percentages)
+        .filter(([_, value]) => value === maxPercentage)
+        .map(([key]) => actionWords[key]);
+
+      document.getElementById('dominantType').innerText = dominantStyles.join(' and ');
+
+      let praiseText = '';
+      if (dominantStyles.includes('Authoritative (Blue)')) {
+        praiseText += '<span style="color: #007ACC;">Your visionary leadership inspires teams to achieve greatness!</span><br>';
+      }
+      if (dominantStyles.includes('Democratic (Green)')) {
+        praiseText += '<span style="color: #009900;">Your inclusive approach fosters collaboration and team unity!</span><br>';
+      }
+      if (dominantStyles.includes('Affiliative (Red)')) {
+        praiseText += '<span style="color: #FF3300;">Your empathetic style builds strong, supportive teams!</span><br>';
+      }
+      if (dominantStyles.includes('Coaching (Yellow)')) {
+        praiseText += '<span style="color: #FFD700;">Your mentoring skills drive individual and team growth!</span><br>';
+      }
+      if (dominantStyles.includes('Pacesetting (Purple)')) {
+        praiseText += '<span style="color: #6A0DAD;">Your drive for excellence pushes teams to new heights!</span><br>';
+      }
+      if (dominantStyles.includes('Coercive (Pink)')) {
+        praiseText += '<span style="color: #FF69B4;">Your decisive leadership shines in critical situations!</span><br>';
+      }
+      if (dominantStyles.length > 1) {
+        praiseText += '<span style="color: #000;">Your versatile leadership makes you an exceptional leader!</span><br>';
+      }
+      document.getElementById('praiseText').innerHTML = praiseText;
+
+      sendToFirestore(userInfo, selectedWords, styleScores, percentages, dominantStyles);
+    }
+
+    function downloadScorecard() {
+      html2canvas(document.querySelector('.result-screen'), { scale: 2 }).then(canvas => {
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const imgData = canvas.toDataURL('image/png');
+        const imgProps = pdf.getImageProperties(imgData);
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        pdf.save(`${userInfo.name}_Leadership_Scorecard.pdf`);
+      });
+    }
+
+    async function sendToFirestore(userInfo, selectedWords, styleScores, percentages, dominantStyles) {
+      const { initializeApp } = await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js');
+      const { getFirestore, doc, setDoc } = await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js');
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyDsLniM6VGqobILzm2Jt9LIn8necnQBzNg",
+        authDomain: "hbdi-star-shaigan.firebaseapp.com",
+        projectId: "hbdi-star-shaigan",
+        storageBucket: "hbdi-star-shaigan.firebasestorage.app",
+        messagingSenderId: "945984031861",
+        appId: "1:945984031861:web:e3d851c1a38ad4c0333c3c",
+        measurementId: "G-QTVYWLMJ1Y"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      const timestamp = new Date().toISOString();
+      const data = {
+        userInfo: {
+          name: userInfo.name,
+          designation: userInfo.designation,
+          team: userInfo.team,
+          city: userInfo.city
+        },
+        selectedWords: selectedWords,
+        styleScores: styleScores,
+        percentages: percentages,
+        dominantStyles: dominantStyles,
+        timestamp: timestamp
+      };
+
+      const docId = `${userInfo.name}_${Date.now()}`;
+      try {
+        await setDoc(doc(db, "leadershipResults", docId), data);
+        console.log("Data successfully written to Firestore!");
+      } catch (error) {
+        console.error("Error writing to Firestore: ", error);
+      }
+    }
+  </script>
+</body>
+</html>
