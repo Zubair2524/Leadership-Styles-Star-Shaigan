@@ -8,8 +8,8 @@
     body {
       font-family: 'Poppins', sans-serif;
       text-align: center;
-      background: linear-gradient(135deg, #007ACC, #009900, #FFD700, #FF3300, #6A0DAD, #FF69B4);
-      color: #333;
+      background: linear-gradient(135deg, #1E3A8A, #1E40AF, #3B82F6, #60A5FA, #93C5FD, #BFDBFE);
+      color: #D1D5DB;
       margin: 0;
       padding: 0;
       overflow-x: hidden;
@@ -18,13 +18,13 @@
       padding: 2rem;
       max-width: 800px;
       margin: 0 auto;
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(30, 58, 138, 0.9);
       border-radius: 15px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
     }
     h1, h2 {
-      color: #1a1a1a;
-      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+      color: #E0E7FF;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
     }
     h2 {
       animation: pulseText 2s infinite ease-in-out;
@@ -44,18 +44,19 @@
       transition: transform 0.2s, box-shadow 0.2s;
     }
     input {
-      background: #f0f0f0;
+      background: #374151;
+      color: #D1D5DB;
       width: 80%;
       max-width: 300px;
     }
     button {
-      background: #007ACC;
+      background: linear-gradient(45deg, #3B82F6, #60A5FA);
       color: white;
       cursor: pointer;
     }
     button:hover {
       transform: scale(1.05);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.6);
     }
     .game-screen, .result-screen {
       display: none;
@@ -64,10 +65,10 @@
       font-size: 2.5rem;
       margin: 1.5rem 0;
       padding: 20px;
-      background: linear-gradient(45deg, #007ACC, #FFD700);
+      background: linear-gradient(45deg, #1E40AF, #93C5FD);
       color: white;
       border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
       font-weight: bold;
       text-transform: uppercase;
       animation: pulse 2s infinite;
@@ -83,77 +84,37 @@
       margin: 1rem 0;
       padding: 10px;
       border-radius: 10px;
+      background: #2A4370;
+      color: #E0E7FF;
     }
     .scorecard {
-      width: 350px;
-      height: 350px;
-      border-radius: 50%;
-      background: conic-gradient(
-        #007ACC 0deg 60deg, /* Authoritative - Blue */
-        #009900 60deg 120deg, /* Democratic - Green */
-        #FF3300 120deg 180deg, /* Affiliative - Red */
-        #FFD700 180deg 240deg, /* Coaching - Yellow */
-        #6A0DAD 240deg 300deg, /* Pacesetting - Purple */
-        #FF69B4 300deg 360deg /* Coercive - Pink */
-      );
-      position: relative;
-      margin: 2rem auto;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-      overflow: hidden;
+      display: none; /* Hide the circular scorecard */
     }
-    .scorecard::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
-      background-size: 400% 400%;
-      animation: glow 5s ease infinite;
-      opacity: 0.3;
-      z-index: 0;
-    }
-    @keyframes glow {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    .scorecard-text {
-      position: absolute;
+    .score-table {
       width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-weight: bold;
-      color: white;
-      text-shadow: 2px 2px 4px #000;
-      font-size: 1.5rem;
-      z-index: 1;
+      max-width: 600px;
+      margin: 2rem auto;
+      border-collapse: collapse;
+      background: #1E3A8A;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
     }
-    .scorecard-text span {
-      position: absolute;
-      transform: translate(-50%, -50%);
-      background: rgba(0, 0, 0, 0.5);
-      padding: 5px 10px;
-      border-radius: 5px;
+    .score-table th, .score-table td {
+      padding: 1rem;
+      border: 2px solid #3B82F6;
+      color: #E0E7FF;
     }
-    .scorecard-text .auth { top: 20%; left: 80%; color: #007ACC; }
-    .scorecard-text .dem { top: 20%; left: 20%; color: #009900; }
-    .scorecard-text .aff { top: 50%; left: 10%; color: #FF3300; }
-    .scorecard-text .coa { top: 50%; left: 90%; color: #FFD700; }
-    .scorecard-text .pac { top: 80%; left: 20%; color: #6A0DAD; }
-    .scorecard-text .coe { top: 80%; left: 80%; color: #FF69B4; }
+    .score-table th {
+      background: linear-gradient(90deg, #1E40AF, #60A5FA);
+    }
     .download-btn, .reset-btn {
-      background: #28a745;
+      background: linear-gradient(45deg, #22C55E, #34D399);
       color: white;
       border: none;
       cursor: pointer;
       margin: 1rem;
     }
     .download-btn:hover, .reset-btn:hover {
-      background: #218838;
+      background: linear-gradient(45deg, #16A34A, #10B981);
     }
     .rainbow-glow {
       height: 15px;
@@ -179,10 +140,10 @@
       animation: float 5s linear infinite;
     }
     .balloon {
-      background: linear-gradient(45deg, #ff69b4, #ff1493);
+      background: linear-gradient(45deg, #BFDBFE, #93C5FD);
     }
     .firework {
-      background: linear-gradient(45deg, #ffd700, #ffa500);
+      background: linear-gradient(45deg, #FCD34D, #FBBF24);
       animation: explode 1.5s ease-out infinite;
     }
     @keyframes float {
@@ -193,23 +154,28 @@
       0% { transform: scale(1); opacity: 1; }
       100% { transform: scale(2.5); opacity: 0; }
     }
+    @keyframes glow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
     .progress-bar {
       width: 80%;
       height: 20px;
-      background: #e0e0e0;
+      background: #2A4370;
       border-radius: 10px;
       overflow: hidden;
       margin: 1rem auto;
     }
     .progress-fill {
       height: 100%;
-      background: linear-gradient(90deg, #007ACC, #FFD700);
+      background: linear-gradient(90deg, #3B82F6, #93C5FD);
       transition: width 0.3s ease;
     }
     .description {
       font-size: 1rem;
       margin: 1rem 0;
-      color: #444;
+      color: #D1D5DB;
       line-height: 1.5;
     }
     .score-details {
@@ -229,6 +195,7 @@
       max-width: 150px;
       height: auto;
       margin: 0 1rem;
+      filter: brightness(0) invert(1);
     }
     .praise {
       font-size: 1.8rem;
@@ -236,7 +203,9 @@
       margin: 1rem 0;
       padding: 10px;
       border-radius: 10px;
-      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+      background: #2A4370;
+      color: #E0E7FF;
     }
   </style>
 </head>
@@ -274,27 +243,15 @@
     <div class="result-screen">
       <h2>Congratulations, <span id="userName"></span>! Your Leadership Style Results</h2>
       <p class="description">You've completed the Leadership Style Assessment! Your dominant style(s): <span id="dominantType"></span>. Explore your results below!</p>
-      <div class="scorecard" id="scoreCard">
-        <div class="scorecard-text">
-          <span class="auth">Auth</span>
-          <span class="dem">Dem</span>
-          <span class="aff">Aff</span>
-          <span class="coa">Coa</span>
-          <span class="pac">Pac</span>
-          <span class="coe">Coe</span>
-        </div>
-        <div class="celebration">
-          <div class="balloon" style="left:10%; animation-delay: 0s;"></div>
-          <div class="balloon" style="left:30%; animation-delay: 1s;"></div>
-          <div class="balloon" style="left:50%; animation-delay: 2s;"></div>
-          <div class="balloon" style="left:70%; animation-delay: 3s;"></div>
-          <div class="firework" style="left:20%; animation-delay: 0.5s;"></div>
-          <div class="firework" style="left:40%; animation-delay: 1.5s;"></div>
-          <div class="firework" style="left:60%; animation-delay: 2.5s;"></div>
-          <div class="firework" style="left:80%; animation-delay: 3.5s;"></div>
-        </div>
-      </div>
-      <div class="score-details" id="profileScores"></div>
+      <table class="score-table" id="scoreCard">
+        <thead>
+          <tr>
+            <th>Leadership Style</th>
+            <th>Percentage</th>
+          </tr>
+        </thead>
+        <tbody id="profileScores"></tbody>
+      </table>
       <div class="praise" id="praiseText"></div>
       <div class="logo-container">
         <img src="shaigan_pharma_logo.png" alt="Shaigan Pharma Logo">
@@ -591,17 +548,6 @@
         percentages.Auth += diff;
       }
 
-      document.getElementById('profileScores').innerHTML =
-        `<div style="color: #007ACC;">Authoritative (Blue): ${percentages.Auth}%</div>
-         <div style="color: #009900;">Democratic (Green): ${percentages.Dem}%</div>
-         <div style="color: #FF3300;">Affiliative (Red): ${percentages.Aff}%</div>
-         <div style="color: #FFD700;">Coaching (Yellow): ${percentages.Coa}%</div>
-         <div style="color: #6A0DAD;">Pacesetting (Purple): ${percentages.Pac}%</div>
-         <div style="color: #FF69B4;">Coercive (Pink): ${percentages.Coe}%</div>`;
-
-      document.getElementById('userInfo').innerText = `${userInfo.name}, ${userInfo.designation}, STAR - Shaigan Training and Reinforcement, ${userInfo.team}, ${userInfo.city}`;
-      document.getElementById('userName').innerText = userInfo.name;
-
       const actionWords = {
         Auth: 'Authoritative (Blue)',
         Dem: 'Democratic (Green)',
@@ -618,27 +564,38 @@
 
       document.getElementById('dominantType').innerText = dominantStyles.join(' and ');
 
+      let tableRows = '';
+      dominantStyles.forEach(style => {
+        const [name, color] = style.split(' (');
+        const percentage = percentages[Object.keys(actionWords).find(key => actionWords[key] === style)];
+        tableRows += `<tr><td>${name}</td><td>${percentage}%</td></tr>`;
+      });
+      document.getElementById('profileScores').innerHTML = tableRows;
+
+      document.getElementById('userInfo').innerText = `${userInfo.name}, ${userInfo.designation}, STAR - Shaigan Training and Reinforcement, ${userInfo.team}, ${userInfo.city}`;
+      document.getElementById('userName').innerText = userInfo.name;
+
       let praiseText = '';
       if (dominantStyles.includes('Authoritative (Blue)')) {
-        praiseText += '<span style="color: #007ACC;">Your visionary leadership inspires teams to achieve greatness!</span><br>';
+        praiseText += '<span style="color: #3B82F6;">Your visionary leadership inspires teams to achieve greatness!</span><br>';
       }
       if (dominantStyles.includes('Democratic (Green)')) {
-        praiseText += '<span style="color: #009900;">Your inclusive approach fosters collaboration and team unity!</span><br>';
+        praiseText += '<span style="color: #10B981;">Your inclusive approach fosters collaboration and team unity!</span><br>';
       }
       if (dominantStyles.includes('Affiliative (Red)')) {
-        praiseText += '<span style="color: #FF3300;">Your empathetic style builds strong, supportive teams!</span><br>';
+        praiseText += '<span style="color: #EF4444;">Your empathetic style builds strong, supportive teams!</span><br>';
       }
       if (dominantStyles.includes('Coaching (Yellow)')) {
-        praiseText += '<span style="color: #FFD700;">Your mentoring skills drive individual and team growth!</span><br>';
+        praiseText += '<span style="color: #FBBF24;">Your mentoring skills drive individual and team growth!</span><br>';
       }
       if (dominantStyles.includes('Pacesetting (Purple)')) {
-        praiseText += '<span style="color: #6A0DAD;">Your drive for excellence pushes teams to new heights!</span><br>';
+        praiseText += '<span style="color: #8B5CF6;">Your drive for excellence pushes teams to new heights!</span><br>';
       }
       if (dominantStyles.includes('Coercive (Pink)')) {
-        praiseText += '<span style="color: #FF69B4;">Your decisive leadership shines in critical situations!</span><br>';
+        praiseText += '<span style="color: #EC4899;">Your decisive leadership shines in critical situations!</span><br>';
       }
       if (dominantStyles.length > 1) {
-        praiseText += '<span style="color: #000;">Your versatile leadership makes you an exceptional leader!</span><br>';
+        praiseText += '<span style="color: #E0E7FF;">Your versatile leadership makes you an exceptional leader!</span><br>';
       }
       document.getElementById('praiseText').innerHTML = praiseText;
 
@@ -650,8 +607,7 @@
         dominantStyles: dominantStyles
       };
 
-      // Send data to Google Sheet
-      fetch(https://script.google.com/macros/s/AKfycbyr-NKLbcfqaHRZJJfT1Bioarq954abgWUcUkc8pw9NyJdadSILPje2liT35CpTTmbQ/exec, {
+      fetch('YOUR_GOOGLE_APPS_SCRIPT_URL', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -659,6 +615,8 @@
       .then(response => response.text())
       .then(result => console.log(result))
       .catch(error => console.error('Error sending to Google Sheet:', error));
+
+      sendToFirestore(userInfo, selectedWords, styleScores, percentages, dominantStyles);
     }
 
     function downloadScorecard() {
@@ -672,6 +630,42 @@
         pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
         pdf.save(`${userInfo.name}_Leadership_Scorecard.pdf`);
       });
+    }
+
+    async function sendToFirestore(userInfo, selectedWords, styleScores, percentages, dominantStyles) {
+      const { initializeApp } = await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js');
+      const { getFirestore, doc, setDoc } = await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js');
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyDsLniM6VGqobILzm2Jt9LIn8necnQBzNg",
+        authDomain: "hbdi-star-shaigan.firebaseapp.com",
+        projectId: "hbdi-star-shaigan",
+        storageBucket: "hbdi-star-shaigan.firebasestorage.app",
+        messagingSenderId: "945984031861",
+        appId: "1:945984031861:web:e3d851c1a38ad4c0333c3c",
+        measurementId: "G-QTVYWLMJ1Y"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      const timestamp = new Date().toISOString();
+      const data = {
+        userInfo: { name: userInfo.name, designation: userInfo.designation, team: userInfo.team, city: userInfo.city },
+        selectedWords: selectedWords,
+        styleScores: styleScores,
+        percentages: percentages,
+        dominantStyles: dominantStyles,
+        timestamp: timestamp
+      };
+
+      const docId = `${userInfo.name}_${Date.now()}`;
+      try {
+        await setDoc(doc(db, "leadershipResults", docId), data);
+        console.log("Data successfully written to Firestore!");
+      } catch (error) {
+        console.error("Error writing to Firestore: ", error);
+      }
     }
   </script>
 </body>
