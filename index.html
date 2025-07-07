@@ -88,7 +88,7 @@
       color: #E0E7FF;
     }
     .scorecard {
-      display: none; /* Hide the circular scorecard */
+      display: none;
     }
     .score-table {
       width: 100%;
@@ -190,6 +190,8 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      background: #1E3A8A;
+      padding: 1rem;
     }
     .logo-container img {
       max-width: 150px;
@@ -206,6 +208,11 @@
       text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
       background: #2A4370;
       color: #E0E7FF;
+    }
+    .result-screen {
+      background: #1E3A8A;
+      padding: 2rem;
+      border-radius: 15px;
     }
   </style>
 </head>
@@ -545,7 +552,7 @@
       const sum = percentages.Auth + percentages.Dem + percentages.Aff + percentages.Coa + percentages.Pac + percentages.Coe;
       if (sum !== 100) {
         const diff = 100 - sum;
-        percentages.Auth += diff;
+        percentages.Auth += diff; // Adjust Authoritative to make total 100%
       }
 
       const actionWords = {
@@ -566,7 +573,7 @@
 
       let tableRows = '';
       dominantStyles.forEach(style => {
-        const [name, color] = style.split(' (');
+        const [name] = style.split(' (');
         const percentage = percentages[Object.keys(actionWords).find(key => actionWords[key] === style)];
         tableRows += `<tr><td>${name}</td><td>${percentage}%</td></tr>`;
       });
@@ -599,24 +606,62 @@
       }
       document.getElementById('praiseText').innerHTML = praiseText;
 
+      // Prepare data for Google Spreadsheet
       const data = {
-        userInfo: userInfo,
-        selectedWords: selectedWords,
-        styleScores: styleScores,
-        percentages: percentages,
-        dominantStyles: dominantStyles
+        name: userInfo.name,
+        designation: userInfo.designation,
+        team: userInfo.team,
+        city: userInfo.city,
+        timestamp: new Date('2025-07-07T13:03:00+05:00').toLocaleString('en-US', { timeZone: 'Asia/Karachi', hour12: true }),
+        authoritative: percentages.Auth,
+        democratic: percentages.Dem,
+        affiliative: percentages.Aff,
+        coaching: percentages.Coa,
+        pacesetting: percentages.Pac,
+        coercive: percentages.Coe,
+        dominantStyles: dominantStyles.join(', ')
       };
 
-      fetch('YOUR_GOOGLE_APPS_SCRIPT_URL', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      })
-      .then(response => response.text())
-      .then(result => console.log(result))
-      .catch(error => console.error('Error sending to Google Sheet:', error));
+      // Send data to Google Spreadsheet with retry logic
+      const maxRetries = 3;
+      let attempt = 0;
 
-      sendToFirestore(userInfo, selectedWords, styleScores, percentages, dominantStyles);
+      function sendToGoogleSheet() {
+        fetch('https://script.google.com/macros/s/AKfycbxFmY1MqmCEJ8OAniw4b2LB_yHqI62xnrOxWdJPwjsbhk1f7eEU8F7zoDZXGyP6FBmo/exec', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            spreadsheetId: '1bhcDNi4qGJWGrsiDOjxUMEnkGmFclyVVbmqy8YdB9W8',
+            data: data
+          })
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(result => {
+          console.log('Google Sheet update response:', result);
+          if (result.status === 'success') {
+            console.log('Data successfully recorded in Google Sheet');
+          } else {
+            throw new Error(result.message || 'Unknown server error');
+          }
+        })
+        .catch(error => {
+          console.error('Error updating Google Sheet:', error.message);
+          if (attempt < maxRetries) {
+            attempt++;
+            console.log(`Retrying (${attempt}/${maxRetries})...`);
+            setTimeout(sendToGoogleSheet, 2000 * attempt); // Exponential backoff
+          } else {
+            console.error('Max retries reached. Failed to update Google Sheet.');
+          }
+        });
+      }
+
+      sendToGoogleSheet();
     }
 
     function downloadScorecard() {
@@ -630,42 +675,6 @@
         pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
         pdf.save(`${userInfo.name}_Leadership_Scorecard.pdf`);
       });
-    }
-
-    async function sendToFirestore(userInfo, selectedWords, styleScores, percentages, dominantStyles) {
-      const { initializeApp } = await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js');
-      const { getFirestore, doc, setDoc } = await import('https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js');
-
-      const firebaseConfig = {
-        apiKey: "AIzaSyDsLniM6VGqobILzm2Jt9LIn8necnQBzNg",
-        authDomain: "hbdi-star-shaigan.firebaseapp.com",
-        projectId: "hbdi-star-shaigan",
-        storageBucket: "hbdi-star-shaigan.firebasestorage.app",
-        messagingSenderId: "945984031861",
-        appId: "1:945984031861:web:e3d851c1a38ad4c0333c3c",
-        measurementId: "G-QTVYWLMJ1Y"
-      };
-
-      const app = initializeApp(firebaseConfig);
-      const db = getFirestore(app);
-
-      const timestamp = new Date().toISOString();
-      const data = {
-        userInfo: { name: userInfo.name, designation: userInfo.designation, team: userInfo.team, city: userInfo.city },
-        selectedWords: selectedWords,
-        styleScores: styleScores,
-        percentages: percentages,
-        dominantStyles: dominantStyles,
-        timestamp: timestamp
-      };
-
-      const docId = `${userInfo.name}_${Date.now()}`;
-      try {
-        await setDoc(doc(db, "leadershipResults", docId), data);
-        console.log("Data successfully written to Firestore!");
-      } catch (error) {
-        console.error("Error writing to Firestore: ", error);
-      }
     }
   </script>
 </body>
