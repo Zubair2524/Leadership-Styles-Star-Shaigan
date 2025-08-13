@@ -615,62 +615,22 @@
       }
       document.getElementById('praiseText').innerHTML = praiseText;
 
-      // Prepare data for Google Spreadsheet
+      // Submit results to Supabase
       const data = {
         name: userInfo.name,
         designation: userInfo.designation,
         team: userInfo.team,
         city: userInfo.city,
-        timestamp: new Date('2025-07-07T13:03:00+05:00').toLocaleString('en-US', { timeZone: 'Asia/Karachi', hour12: true }),
+        timestamp: new Date().toLocaleString('en-US', { timeZone: 'Asia/Karachi', hour12: true }),
         authoritative: percentages.Auth,
         democratic: percentages.Dem,
         affiliative: percentages.Aff,
         coaching: percentages.Coa,
         pacesetting: percentages.Pac,
         coercive: percentages.Coe,
-        dominantStyles: dominantStyles.join(', ')
+        dominant_styles: dominantStyles.join(', ')
       };
-
-      // Send data to Google Spreadsheet with retry logic
-      const maxRetries = 3;
-      let attempt = 0;
-
-      function sendToGoogleSheet() {
-        fetch('https://script.google.com/macros/s/AKfycbxFmY1MqmCEJ8OAniw4b2LB_yHqI62xnrOxWdJPwjsbhk1f7eEU8F7zoDZXGyP6FBmo/exec', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            spreadsheetId: '1bhcDNi4qGJWGrsiDOjxUMEnkGmFclyVVbmqy8YdB9W8',
-            data: data
-          })
-        })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then(result => {
-          console.log('Google Sheet update response:', result);
-          if (result.status === 'success') {
-            console.log('Data successfully recorded in Google Sheet');
-          } else {
-            throw new Error(result.message || 'Unknown server error');
-          }
-        })
-        .catch(error => {
-          console.error('Error updating Google Sheet:', error.message);
-          if (attempt < maxRetries) {
-            attempt++;
-            console.log(`Retrying (${attempt}/${maxRetries})...`);
-            setTimeout(sendToGoogleSheet, 2000 * attempt); // Exponential backoff
-          } else {
-            console.error('Max retries reached. Failed to update Google Sheet.');
-          }
-        });
-      }
-
-      sendToGoogleSheet();
+      submitResultsToSupabase(data);
     }
 
     function downloadScorecard() {
@@ -685,6 +645,54 @@
         pdf.save(`${userInfo.name}_Leadership_Scorecard.pdf`);
       });
     }
+
+    function submitResultsToSupabase(data) {
+      const projectUrl = 'https://nfwuztbyvbasaqbpyojr.supabase.co'; // Replace with your Supabase URL
+      const apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5md3V6dGJ5dmJhc2FxYnB5b2pyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwNjQ4NzcsImV4cCI6MjA3MDY0MDg3N30.DhEvb6H9kczxdD1N9_d6DmDkk6_9sUGZfKSFk7hYLdQ'; // Replace with your Supabase anon key
+      const tableName = 'leadership_results';
+
+      fetch(`${projectUrl}/rest/v1/${tableName}`, {
+        method: 'POST',
+        headers: {
+          'apikey': apiKey,
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        console.log('Leadership results submitted successfully to Supabase');
+        alert('Your leadership style results have been successfully saved!');
+      })
+      .catch(error => {
+        console.error('Error submitting to Supabase:', error);
+        alert(`Error saving data to Supabase: ${error.message}. Your results are still available, and you can download your scorecard.`);
+      });
+    }
   </script>
 </body>
 </html>
+```
+
+### Notes
+- **Table Creation**: Before using this code, create the `leadership_results` table in your "Mindset" Supabase project using the SQL Editor with the following structure:
+  ```sql
+  CREATE TABLE public.leadership_results (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    designation TEXT NOT NULL,
+    team TEXT NOT NULL,
+    city TEXT NOT NULL,
+    timestamp TEXT NOT NULL,
+    authoritative INTEGER NOT NULL,
+    democratic INTEGER NOT NULL,
+    affiliative INTEGER NOT NULL,
+    coaching INTEGER NOT NULL,
+    pacesetting INTEGER NOT NULL,
+    coercive INTEGER NOT NULL,
+    dominant_styles TEXT NOT NULL
+  );
